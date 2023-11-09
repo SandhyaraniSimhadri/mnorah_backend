@@ -25,7 +25,7 @@ Route::middleware('api_check')->get('get_admins', 'AdminController@get_admins');
 Route::get('get_churches', 'ChurchController@get_churches');
 Route::post('get_single_admin', 'AdminController@get_single_admin');
 
-Route::group(['middleware' => ['api_check', 'cors']], function () {
+Route::group(['middleware' => ['cors']], function () {
 Route::post('update_subadmin', 'AdminController@update_subadmin');
 Route::post('update_church', 'ChurchController@update_church');
 Route::post('update_member', 'MembersController@update_member');
