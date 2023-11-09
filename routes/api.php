@@ -24,10 +24,12 @@ Route::middleware('api_check')->post('add_subadmin', 'AdminController@add_subadm
 Route::middleware('api_check')->get('get_admins', 'AdminController@get_admins');
 Route::get('get_churches', 'ChurchController@get_churches');
 Route::post('get_single_admin', 'AdminController@get_single_admin');
+
+Route::group(['middleware' => ['api_check', 'cors']], function () {
 Route::post('update_subadmin', 'AdminController@update_subadmin');
 Route::post('update_church', 'ChurchController@update_church');
 Route::post('update_member', 'MembersController@update_member');
-
+});
 Route::post('get_single_church', 'ChurchController@get_single_church');
 Route::post('get_single_member', 'MembersController@get_single_member');
 Route::post('delete_admin', 'AdminController@delete_admin');

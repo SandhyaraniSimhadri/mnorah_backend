@@ -64,6 +64,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'api_check' => \App\Http\Middleware\APICheck::class,
+        'cors' => \App\Http\Middleware\Cors::class,
     ];
     protected $middlewarePriority = [
         \Illuminate\Session\Middleware\StartSession::class,
