@@ -25,26 +25,9 @@ class ChurchController extends Controller{
 
     public function add_church(Request $request)
     {
-    //    dd($request);
-    // return $request;
-        // $this->validate($request, [
-        //     'email' => 'required',
-        //     'password' => 'required',
-        //     'username'=>'required',
-        //     'phone'=>'required',
-        //     'location' => 'required',
-        // ]);
+
         $date = date('Y-m-d H:i:s');
-        $email = $request->input('email');
-        $md5_password = md5($request->input('password'));
-
-        // $user_info=DB::table('super_admins')
-        // ->where('email','=',$email)
-        // ->first();
-        // if($user_info){
-        //     $data = array('status' => false, 'msg' => 'Email already existed, try with another email.');
-
-        // }
+  
         $data = array(
             'admin_id' => $request->admin_id,
             'church_name' => $request->church_name,
