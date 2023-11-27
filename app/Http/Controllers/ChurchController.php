@@ -48,7 +48,7 @@ class ChurchController extends Controller{
             $aid= DB::table('churches')->insertGetId($data);
 
         if ($aid) { 
-                $data = array('status' => true, 'msg' => 'Church added successfully successfull!');
+                $data = array('status' => true, 'msg' => 'Church added successfully');
                 return response()->json($data);
 
         } else {

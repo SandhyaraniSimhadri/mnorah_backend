@@ -39,7 +39,7 @@ Route::post('update_member', 'MembersController@update_member');
 Route::post('update_feed', 'FeedController@update_feed');
 Route::post('update_subadmin', 'AdminController@update_subadmin');
 Route::post('update_event', 'EventController@update_event');
-
+Route::post('update_visitor', 'VisitorController@update_visitor');
 });
 
 Route::post('get_single_member', 'MembersController@get_single_member');
@@ -59,7 +59,10 @@ Route::post('add_event', 'EventController@add_event');
 Route::get('get_events', 'EventController@get_events');
 
 
-
+Route::post('get_single_visitor', 'VisitorController@get_single_visitor');
+Route::post('delete_visitor', 'VisitorController@delete_visitor');
+Route::post('add_visitor', 'VisitorController@add_visitor');
+Route::get('get_visitors', 'VisitorController@get_visitors');
 
 
 
