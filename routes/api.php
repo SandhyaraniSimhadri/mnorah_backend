@@ -40,6 +40,10 @@ Route::post('update_feed', 'FeedController@update_feed');
 Route::post('update_subadmin', 'AdminController@update_subadmin');
 Route::post('update_event', 'EventController@update_event');
 Route::post('update_visitor', 'VisitorController@update_visitor');
+Route::post('update_testimony', 'TestimonyController@update_testimony');
+Route::post('update_life_group', 'LifeGroupController@update_life_group');
+
+
 });
 
 Route::post('get_single_member', 'MembersController@get_single_member');
@@ -63,6 +67,21 @@ Route::post('get_single_visitor', 'VisitorController@get_single_visitor');
 Route::post('delete_visitor', 'VisitorController@delete_visitor');
 Route::post('add_visitor', 'VisitorController@add_visitor');
 Route::get('get_visitors', 'VisitorController@get_visitors');
+
+
+Route::post('get_single_testimony', 'TestimonyController@get_single_testimony');
+Route::post('delete_testimony', 'TestimonyController@delete_testimony');
+Route::post('add_testimony', 'TestimonyController@add_testimony');
+Route::get('get_testimony', 'TestimonyController@get_testimony');
+
+
+Route::post('get_single_life_group', 'LifeGroupController@get_single_life_group');
+Route::post('delete_life_group', 'LifeGroupController@delete_life_group');
+Route::post('add_life_group', 'LifeGroupController@add_life_group');
+Route::get('get_life_groups', 'LifeGroupController@get_life_groups');
+Route::get('get_members_ids', 'LifeGroupController@get_members_ids');
+
+
 
 
 
