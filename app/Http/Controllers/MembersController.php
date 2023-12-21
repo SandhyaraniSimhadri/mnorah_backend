@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 use App;
-
+use App\Exports\MemberReportsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 use App\Services\UserDataService;
@@ -181,4 +182,17 @@ class MembersController extends Controller{
             return response()->json($data);
         }
     }
+    public function get_members_report(Request $request)
+    {
+        // Assuming 'rows' is an array in the request
+        $rows = $request->input('rows');
+        // return $rows;
+        // Additional validation if needed
+        if (!is_array($rows)) {
+            return response()->json(['error' => 'Invalid data format'], 400);
+        }
+    
+        return Excel::download(new MemberReportsExport($rows), 'reports' . '.csv');
+    }
+    
 }

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Mail\ForgotPassword;
+
 
 use App;
 
@@ -136,5 +138,92 @@ class UsersController extends Controller{
         }
 
     }
+    public function sent_OTP(REQUEST $request){
+        $otp = rand(1000, 9999);
+        $user_data = DB::table('users')
+        ->where('email','=',$request->email)
+        ->first();
+        if($user_data){
+            $update_data=DB::table('users')
+            ->where('email','=',$request->email)
+            ->update([
+                'OTP' => $otp,
+            ]);
+            $data = [
+                'email' => $request->email,
+                'otp' => $otp,
+                'user_name' => $user_data->user_name
+            ];        
+            Mail::to($request->email)->send(new ForgotPassword($data));
+    
+            $response = array('status' => true, 'msg' => 'Otp sent to your registered email','data'=>$request->email);
+            return json_encode($response);
 
-}
+        } else {
+            $response = array('status' => false, 'msg' => 'Invalid email');
+            return json_encode($response);
+        }
+
+        }
+        public function verify_OTP(Request $request)
+        {
+            $this->validate($request, [
+                'email' => 'required',
+                'otp' => 'required'
+            ]);
+            $email = $request->input('email');
+            $otp = $request->input('otp');
+            $result = DB::table('users')
+                ->where('email', '=', $email)
+                ->where('otp', '=', $otp)
+                ->first();
+            if ($result) {
+                $response = array('status' => true, 'msg' => 'Otp verified successfully!','data'=>$result->email);
+                return json_encode($response);
+            } else {
+                $response = array('status' => false, 'msg' => 'Invalid OTP, please enter valid OTP');
+                return json_encode($response);
+            }
+        }
+        public function update_password(Request $request)
+        {
+    
+            //validation
+            $this->validate($request, [
+                'email' => 'required',
+                'otp' => 'required',
+                'confirm_password' => 'required'
+            ]);
+            $current_date_time = date('Y-m-d H:i:s');
+    
+            $email = $request->input('email');
+            $otp = $request->input('otp');
+            $password = $request->input('confirm_password');
+            $result = DB::table('users')
+                ->where('email', '=', $email)
+                ->where('otp', '=', $otp)
+                ->first();
+                $md5_password = md5($request->input('confirm_password'));
+            if ($result) {
+                if($result->password == $md5_password){
+                    $response = array('status' => true, 'msg' => 'Duplicate');
+                    return json_encode($response);    
+                }
+                else{
+                DB::table('users')
+                    ->where('email', $email)
+                    ->where('otp', $otp)
+                    ->update([
+                        'password' =>$md5_password,
+                        'otp' => 0,
+                    ]);
+                $response = array('status' => true, 'msg' => 'Password changed successfully');
+                return json_encode($response);}
+            } else {
+                $response = array('status' => false, 'msg' => 'Invalid data');
+                return json_encode($response);
+            }
+    
+        }
+    }
+

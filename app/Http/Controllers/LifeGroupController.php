@@ -141,7 +141,6 @@ public function get_members_ids(REQUEST $request){
     ->join('churches as c','u.church_id','=','c.id')
     ->where('u.user_type','=',3)
     ->where('u.deleted','=',0)
-    ->where('u.is_active','=',1)
     ->select('u.id','u.user_name','c.church_name')
     ->orderBy('created_at','DESC')
     ->get();

@@ -20,17 +20,27 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('verify_user', 'UsersController@verify_user');
 Route::post('register', 'UsersController@register');
+Route::post('sent_OTP', 'UsersController@sent_OTP');
+Route::post('verify_OTP', 'UsersController@verify_OTP');
+Route::post('update_password', 'UsersController@update_password');
+
+
+
 
 Route::middleware('api_check')->post('add_subadmin', 'AdminController@add_subadmin');
 Route::middleware('api_check')->get('get_admins', 'AdminController@get_admins');
 Route::post('delete_admin', 'AdminController@delete_admin');
 Route::post('get_single_admin', 'AdminController@get_single_admin');
+Route::post('send_sub_admin_invitation', 'AdminController@send_sub_admin_invitation');
+
 
 
 Route::middleware('api_check')->post('add_church', 'ChurchController@add_church');
 Route::get('get_churches', 'ChurchController@get_churches');
 Route::post('get_single_church', 'ChurchController@get_single_church');
 Route::post('delete_church', 'ChurchController@delete_church');
+Route::get('get_admins_for_new_church', 'ChurchController@get_admins_for_new_church');
+
 
 
 Route::group(['middleware' => ['cors']], function () {
@@ -42,6 +52,7 @@ Route::post('update_event', 'EventController@update_event');
 Route::post('update_visitor', 'VisitorController@update_visitor');
 Route::post('update_testimony', 'TestimonyController@update_testimony');
 Route::post('update_life_group', 'LifeGroupController@update_life_group');
+Route::post('update_prayer_request', 'PrayerRequestController@update_prayer_request');
 
 
 });
@@ -50,6 +61,7 @@ Route::post('get_single_member', 'MembersController@get_single_member');
 Route::middleware('api_check')->get('get_members', 'MembersController@get_members');
 Route::middleware('api_check')->post('add_member', 'MembersController@add_member');
 Route::post('delete_member', 'MembersController@delete_member');
+Route::post('get_members_report', 'MembersController@get_members_report');
 
 Route::post('get_single_feed', 'FeedController@get_single_feed');
 Route::post('delete_feed', 'FeedController@delete_feed');
@@ -80,6 +92,15 @@ Route::post('delete_life_group', 'LifeGroupController@delete_life_group');
 Route::post('add_life_group', 'LifeGroupController@add_life_group');
 Route::get('get_life_groups', 'LifeGroupController@get_life_groups');
 Route::get('get_members_ids', 'LifeGroupController@get_members_ids');
+
+
+
+Route::post('get_single_prayer_request', 'PrayerRequestController@get_single_prayer_request');
+Route::post('delete_prayer_request', 'PrayerRequestController@delete_prayer_request');
+Route::post('add_prayer_request', 'PrayerRequestController@add_prayer_request');
+Route::get('get_prayer_requests', 'PrayerRequestController@get_prayer_requests');
+// Route::get('get_members_ids', 'PrayerRequestController@get_members_ids');
+Route::post('get_church_members', 'PrayerRequestController@get_church_members');
 
 
 
