@@ -18,6 +18,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+
+
+
+Route::group(['middleware' => ['cors']], function () {
+
 Route::post('verify_user', 'UsersController@verify_user');
 Route::post('register', 'UsersController@register');
 Route::post('sent_OTP', 'UsersController@sent_OTP');
@@ -41,9 +47,6 @@ Route::post('get_single_church', 'ChurchController@get_single_church');
 Route::post('delete_church', 'ChurchController@delete_church');
 Route::get('get_admins_for_new_church', 'ChurchController@get_admins_for_new_church');
 
-
-
-Route::group(['middleware' => ['cors']], function () {
 Route::post('update_church', 'ChurchController@update_church');
 Route::post('update_member', 'MembersController@update_member');
 Route::post('update_feed', 'FeedController@update_feed');
@@ -53,10 +56,6 @@ Route::post('update_visitor', 'VisitorController@update_visitor');
 Route::post('update_testimony', 'TestimonyController@update_testimony');
 Route::post('update_life_group', 'LifeGroupController@update_life_group');
 Route::post('update_prayer_request', 'PrayerRequestController@update_prayer_request');
-
-
-});
-
 Route::post('get_single_member', 'MembersController@get_single_member');
 Route::middleware('api_check')->get('get_members', 'MembersController@get_members');
 Route::middleware('api_check')->post('add_member', 'MembersController@add_member');
@@ -67,6 +66,7 @@ Route::post('get_single_feed', 'FeedController@get_single_feed');
 Route::post('delete_feed', 'FeedController@delete_feed');
 Route::post('add_feed', 'FeedController@add_feed');
 Route::get('get_feeds', 'FeedController@get_feeds');
+
 
 
 Route::post('get_single_event', 'EventController@get_single_event');
@@ -101,6 +101,11 @@ Route::post('add_prayer_request', 'PrayerRequestController@add_prayer_request');
 Route::get('get_prayer_requests', 'PrayerRequestController@get_prayer_requests');
 // Route::get('get_members_ids', 'PrayerRequestController@get_members_ids');
 Route::post('get_church_members', 'PrayerRequestController@get_church_members');
+
+
+});
+
+
 
 
 
