@@ -28,7 +28,7 @@ class AdminController extends Controller{
     {
         $date = date('Y-m-d H:i:s');
         $email = $request->input('email');
-        // $md5_password = md5($request->input('password'));
+        $md5_password = md5('123456');
 
         $user_info=DB::table('users')
         ->where('email','=',$email)
@@ -45,7 +45,7 @@ class AdminController extends Controller{
             'dob' => $request->dob,
             'mobile_no' => $request->phone_number,
             'location' => $request->city,
-            // 'password' => $md5_password,
+            'password' => $md5_password,
             'last_login'=>$date,
             'church_id' => $request->church_id,
             'user_type' =>2,

@@ -87,7 +87,7 @@ class MembersController extends Controller{
     }
     public function get_members(REQUEST $request){
         $member_info=DB::table('users as u')
-        ->join('churches as c','u.church_id','=','c.id')
+        ->leftJoin('churches as c','u.church_id','=','c.id')
         ->where('u.user_type','=',3)
         ->where('u.deleted','=',0)
         ->select('u.*','c.church_name')
@@ -95,14 +95,14 @@ class MembersController extends Controller{
         ->get();
         
         $active_users=DB::table('users as u')
-        ->join('churches as c','u.church_id','=','c.id')
+        ->leftJoin('churches as c','u.church_id','=','c.id')
         ->where('u.user_type','=',3)
         ->where('u.is_active','=',1)
         ->where('u.deleted','=',0)
         ->count();
 
         $inactive_users=DB::table('users as u')
-        ->join('churches as c','u.church_id','=','c.id')
+        ->leftJoin('churches as c','u.church_id','=','c.id')
         ->where('u.is_active','=',0)
         ->where('u.user_type','=',3)
         ->where('u.deleted','=',0)
@@ -115,7 +115,7 @@ class MembersController extends Controller{
     }
     public function get_single_member(REQUEST $request){
         $member_info=DB::table('users as u')
-        ->join('churches as c','u.church_id','=','c.id')
+        ->leftJoin('churches as c','u.church_id','=','c.id')
         ->where('u.id','=',$request->id)
         ->where('u.user_type','=',3)
         ->select('u.*','c.church_name')

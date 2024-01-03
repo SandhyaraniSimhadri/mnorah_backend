@@ -76,7 +76,7 @@ class ChurchController extends Controller{
                   ->orWhereNull('u.user_type'); 
         })
         ->select(
-            'c.*',
+            'c.*', DB::raw('c.image as avatar'),
             DB::raw('GROUP_CONCAT(u.user_name) as admins'),
             DB::raw('GROUP_CONCAT(u.id) as admin_ids')
         )
@@ -106,7 +106,7 @@ class ChurchController extends Controller{
                   ->orWhereNull('u.deleted');
         })
         ->select(
-            'c.*',
+            'c.*', DB::raw('c.image as avatar'),
             DB::raw('GROUP_CONCAT(u.user_name) as admins'),
             DB::raw('GROUP_CONCAT(u.id) as admin_ids')
         )
