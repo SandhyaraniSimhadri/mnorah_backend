@@ -86,7 +86,7 @@ class DashboardController extends Controller{
         return response()->json($data);
     }
 
-    public function get_dashboard_members(Request $request){
+    public function get_superadmin_dashboard_data(Request $request){
     
         $weekly_visitors = DB::table('visitors as v')
         ->select(DB::raw('YEARWEEK(v.created_at) as week'), DB::raw('COUNT(*) as visitors'))

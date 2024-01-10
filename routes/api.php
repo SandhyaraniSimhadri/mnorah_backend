@@ -102,7 +102,7 @@ Route::middleware('api_check')->get('get_prayer_requests', 'PrayerRequestControl
 // Route::get('get_members_ids', 'PrayerRequestController@get_members_ids');
 Route::post('get_church_members', 'PrayerRequestController@get_church_members');
 
-Route::middleware('api_check')->get('get_dashboard_members', 'DashboardController@get_dashboard_members');
+Route::middleware('api_check')->get('get_superadmin_dashboard_data', 'DashboardController@get_superadmin_dashboard_data');
 
 Route::middleware('api_check')->get('get_dashboard_visitors', 'DashboardController@get_dashboard_visitors');
 
