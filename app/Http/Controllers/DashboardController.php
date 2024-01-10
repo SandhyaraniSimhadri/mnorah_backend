@@ -237,5 +237,126 @@ class DashboardController extends Controller{
         return response()->json($data);
     }
   
+    public function get_subadmin_dashboard_data(Request $request){
+    
+        $weekly_visitors = DB::table('visitors as v')
+        ->select(DB::raw('YEARWEEK(v.created_at) as week'), DB::raw('COUNT(*) as visitors'))
+        ->where('v.deleted', '=', 0)
+        ->where('v.church_id', '=', $request['logged_church_id'])
+        ->groupBy(DB::raw('YEARWEEK(v.created_at)'))
+        ->get();
+
+        $visitors_array = $weekly_visitors->pluck('visitors')->toArray();
+        $total_visitors = array_sum($visitors_array);
+
+        $visitors=array(
+            'weekly_visitors' => $visitors_array,
+            'total_visitors' => $total_visitors
+        );
+
+
+
+        $weekly_active_users = DB::table('users as u')
+            ->leftJoin('churches as c', 'u.church_id', '=', 'c.id')
+            ->select(DB::raw('YEARWEEK(u.created_at) as week'), DB::raw('COUNT(*) as active_users'))
+            ->where('u.user_type', '=', 3)
+            ->where('u.church_id','=',$request['logged_church_id'])
+            ->where('u.is_active', '=', 1)
+            ->where('u.deleted', '=', 0)
+            ->groupBy(DB::raw('YEARWEEK(u.created_at)'))
+            ->get();
+    
+        // Extract active user counts and calculate the total sum
+        $active_users_array = $weekly_active_users->pluck('active_users')->toArray();
+        $total_active_users = array_sum($active_users_array);
+    
+        $users=array(
+            'weekly_active_users' => $active_users_array,
+            'total_active_users' => $total_active_users
+        );
+        
+
+        $weekly_prayer_requests = DB::table('prayer_requests as p')
+        ->select(DB::raw('YEARWEEK(p.created_at) as week'), DB::raw('COUNT(*) as requests'))
+        ->where('p.church_id', '=', $request['logged_church_id'])
+        ->where('p.deleted', '=', 0)
+        ->groupBy(DB::raw('YEARWEEK(p.created_at)'))
+        ->get();
+
+   
+        $weekly_prayer_requests = $weekly_prayer_requests->pluck('requests')->toArray();
+        $total_prayer_requests = array_sum($weekly_prayer_requests);
+
+        $prayer_requests=array(
+            'weekly_prayer_requests' => $weekly_prayer_requests,
+            'total_prayer_requests' => $total_prayer_requests
+        );
+
+
+
+        $weekly_testimony = DB::table('testimony as t')
+        ->select(DB::raw('YEARWEEK(t.created_at) as week'), DB::raw('COUNT(*) as testimony'))
+        ->where('t.deleted', '=', 0)
+        ->where('t.church_id', '=', $request['logged_church_id'])
+        ->groupBy(DB::raw('YEARWEEK(t.created_at)'))
+        ->get();
+
+   
+        $weekly_testimony = $weekly_testimony->pluck('testimony')->toArray();
+        $total_testimony = array_sum($weekly_testimony);
+
+        $testimony=array(
+            'weekly_testimony' => $weekly_testimony,
+            'total_testimony' => $total_testimony
+        );
+
+
+        $weekly_feeds = DB::table('feeds as f')
+        ->select(DB::raw('YEARWEEK(f.created_at) as week'), DB::raw('COUNT(*) as feeds'))
+        ->where('f.deleted', '=', 0)
+        ->where('f.church_id', '=', $request['logged_church_id'])
+        ->groupBy(DB::raw('YEARWEEK(f.created_at)'))
+        ->get();
+
+   
+        $weekly_feeds = $weekly_feeds->pluck('feeds')->toArray();
+        $total_feeds = array_sum($weekly_feeds);
+
+        $feeds=array(
+            'weekly_feeds' => $weekly_feeds,
+            'total_feeds' => $total_feeds
+        );
+
+
+
+        $weekly_life_group_members = DB::table('lifegroups as l')
+        ->select(DB::raw('YEARWEEK(l.created_at) as week'),   DB::raw('SUM(l.members_count) as members_sum'))
+        ->where('l.deleted', '=', 0)
+        ->where('l.church_id', '=', $request['logged_church_id'])
+        ->groupBy(DB::raw('YEARWEEK(l.created_at)'))
+        ->get();
+
+   
+        $weekly_life_group_members = $weekly_life_group_members->pluck('members_sum')->toArray();
+        $total_life_group_members = array_sum($weekly_life_group_members);
+
+        $life_group_members=array(
+            'weekly_life_group_members' => $weekly_life_group_members,
+            'total_life_group_members' => $total_life_group_members
+        );
+    
+        $data = array(
+            'status' => true,
+            'visitors'=>$visitors,
+            'members'=>$users,
+            'prayer_requests'=>$prayer_requests,
+            'testimony'=>$testimony,
+            'feeds' => $feeds,
+            'life_group_members'=>$life_group_members,
+        );
+
+    
+        return response()->json($data);
+    }
     
 }

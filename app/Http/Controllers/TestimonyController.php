@@ -52,15 +52,21 @@ class TestimonyController extends Controller{
 
     }
     public function get_testimony(REQUEST $request){
-        $testimony_info=DB::table('testimony as t')
+        $query=DB::table('testimony as t')
         ->join('churches as c','t.church_id', '=','c.id')
         ->where('t.deleted','=',0)
         ->select('t.*','c.church_name',DB::raW('t.image as avatar'))
-        ->orderBy('t.created_at','DESC')
-        ->get();
-        $data = array('status' => true, 'data' => $testimony_info);
-        return response()->json($data);
-           
+        ->orderBy('t.created_at','DESC');
+
+
+        if ($request['logged_user_type'] == 1) {
+            $testimony_info = $query->get();
+        } else if ($request['logged_user_type'] == 2) {
+            $testimony_info = $query->where('t.church_id', '=', $request['logged_church_id'])->get();
+        }
+
+        return response()->json(['status' => true, 'data' => $testimony_info]);
+     
     }
 
     public function get_single_testimony(REQUEST $request){

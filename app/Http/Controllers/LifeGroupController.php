@@ -51,14 +51,28 @@ class LifeGroupController extends Controller{
 
     }
     public function get_life_groups(REQUEST $request){
-        $life_groups_info=DB::table('lifegroups as l')
+        // $life_groups_info=DB::table('lifegroups as l')
+        // ->join('churches as c','l.church_id', '=','c.id')
+        // ->where('l.deleted','=',0)
+        // ->select('l.*','c.church_name',DB::raW('l.image as avatar'))
+        // ->orderBy('l.created_at','DESC')
+        // ->get();
+        // $data = array('status' => true, 'data' => $life_groups_info);
+        // return response()->json($data);
+
+        $query=DB::table('lifegroups as l')
         ->join('churches as c','l.church_id', '=','c.id')
         ->where('l.deleted','=',0)
         ->select('l.*','c.church_name',DB::raW('l.image as avatar'))
-        ->orderBy('l.created_at','DESC')
-        ->get();
-        $data = array('status' => true, 'data' => $life_groups_info);
-        return response()->json($data);
+        ->orderBy('l.created_at','DESC');
+
+        if ($request['logged_user_type'] == 1) {
+            $life_group_info = $query->get();
+        } else if ($request['logged_user_type'] == 2) {
+            $life_group_info = $query->where('l.church_id', '=', $request['logged_church_id'])->get();
+        }
+
+        return response()->json(['status' => true, 'data' => $life_group_info]);
            
     }
 

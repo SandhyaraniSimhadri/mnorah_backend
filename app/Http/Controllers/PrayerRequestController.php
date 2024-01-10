@@ -53,17 +53,24 @@ class PrayerRequestController extends Controller{
 
     }
     public function get_prayer_requests(REQUEST $request){
-        $prayer_request_info=DB::table('prayer_requests as p')
+
+
+        $query=DB::table('prayer_requests as p')
         ->join('churches as c','p.church_id', '=','c.id')
         ->join('users as u','p.member_id', '=','u.id')
         ->where('p.deleted','=',0)
         ->where('c.deleted','=',0)
         ->where('u.deleted','=',0)
         ->select('p.*','c.church_name','u.user_name',DB::raW('p.image as avatar'))
-        ->orderBy('p.created_at','DESC')
-        ->get();
-        $data = array('status' => true, 'data' => $prayer_request_info);
-        return response()->json($data);
+        ->orderBy('p.created_at','DESC');
+
+        if ($request['logged_user_type'] == 1) {
+            $requests_info = $query->get();
+        } else if ($request['logged_user_type'] == 2) {
+            $requests_info = $query->where('p.church_id', '=', $request['logged_church_id'])->get();
+        }
+
+        return response()->json(['status' => true, 'data' => $requests_info]);
            
     }
 

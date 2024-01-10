@@ -54,14 +54,18 @@ class FeedController extends Controller{
 
     }
     public function get_feeds(REQUEST $request){
-        $feeds_info=DB::table('feeds as f')
+        $query=DB::table('feeds as f')
         ->join('churches as c','f.church_id', '=','c.id')
         ->where('f.deleted','=',0)
         ->select('f.*','c.church_name',DB::raW('f.image as avatar'))
-        ->orderBy('f.created_at','DESC')
-        ->get();
-        $data = array('status' => true, 'data' => $feeds_info);
-        return response()->json($data);
+        ->orderBy('f.created_at','DESC');
+       
+        if ($request['logged_user_type'] == 1) {
+            $feeds_info = $query->get();
+        } else if ($request['logged_user_type'] == 2) {
+            $feeds_info = $query->where('f.church_id', '=', $request['logged_church_id'])->get();
+        }
+        return response()->json(['status' => true, 'data' => $feeds_info]);
            
     }
 

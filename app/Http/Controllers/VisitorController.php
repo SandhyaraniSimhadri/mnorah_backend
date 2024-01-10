@@ -66,15 +66,18 @@ class VisitorController extends Controller{
 
     }
     public function get_visitors(REQUEST $request){
-        $visitor_info=DB::table('visitors as v')
+        $query=DB::table('visitors as v')
         ->join('churches as c','c.id', '=','v.church_id')
         ->where('v.deleted','=',0)
         ->select('v.*','c.church_name',DB::raw('v.image as avatar'))
-        ->orderBy('v.created_at','DESC')
-        ->get();
-        $data = array('status' => true, 'data' => $visitor_info);
-        return response()->json($data);
-           
+        ->orderBy('v.created_at','DESC');
+
+        if ($request['logged_user_type'] == 1) {
+            $visitor_info = $query->get();
+        } else if ($request['logged_user_type'] == 2) {
+            $visitor_info = $query->where('v.church_id', '=', $request['logged_church_id'])->get();
+        }
+        return response()->json(['status' => true, 'data' => $visitor_info]);
     }
 
     public function get_single_visitor(REQUEST $request){

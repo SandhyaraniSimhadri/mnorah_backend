@@ -86,28 +86,48 @@ class MembersController extends Controller{
     }
     }
     public function get_members(REQUEST $request){
-        $member_info=DB::table('users as u')
-        ->leftJoin('churches as c','u.church_id','=','c.id')
-        ->where('u.user_type','=',3)
+        $query=DB::table('users as u')
+        ->leftJoin('churches as c','u.church_id', '=','c.id')
         ->where('u.deleted','=',0)
-        ->select('u.*','c.church_name')
-        ->orderBy('created_at','DESC')
-        ->get();
-        
-        $active_users=DB::table('users as u')
-        ->leftJoin('churches as c','u.church_id','=','c.id')
+        ->where('u.user_type','=',3)
+        ->select('u.*','c.church_name',DB::raW('u.avatar as avatar'))
+        ->orderBy('u.created_at','DESC');
+
+        if ($request['logged_user_type'] == 1) {
+            $member_info = $query->get();
+        } else if ($request['logged_user_type'] == 2) {
+            $member_info = $query->where('u.church_id', '=', $request['logged_church_id'])->get();
+        }
+      
+
+        $query=DB::table('users as u')
+        ->leftJoin('churches as c','u.church_id', '=','c.id')
+        ->where('u.deleted','=',0)
         ->where('u.user_type','=',3)
         ->where('u.is_active','=',1)
-        ->where('u.deleted','=',0)
-        ->count();
+        ->select('u.*','c.church_name',DB::raW('u.image as avatar'))
+        ->orderBy('u.created_at','DESC');
 
-        $inactive_users=DB::table('users as u')
-        ->leftJoin('churches as c','u.church_id','=','c.id')
-        ->where('u.is_active','=',0)
+        if ($request['logged_user_type'] == 1) {
+            $active_users = $query->count(); // Count for the first condition
+        } else if ($request['logged_user_type'] == 2) {
+            $active_users = $query->where('u.church_id', '=', $request['logged_church_id'])->count(); // Count for the second condition
+        }
+
+        $query=DB::table('users as u')
+        ->leftJoin('churches as c','u.church_id', '=','c.id')
+        ->where('u.deleted','=',0)
         ->where('u.user_type','=',3)
-        ->where('u.deleted','=',0)
-        ->count();
+        ->where('u.is_active','=',1)
+        ->select('u.*','c.church_name',DB::raW('u.image as avatar'))
+        ->orderBy('u.created_at','DESC');
 
+        if ($request['logged_user_type'] == 1) {
+         
+            $inactive_users = $query->count(); // Count for the first condition
+        } else if ($request['logged_user_type'] == 2) {
+            $inactive_users = $query->where('u.church_id', '=', $request['logged_church_id'])->count(); // Count for the second condition
+        }
         $data = array('status' => true, 'data' => $member_info,'active_users'=>$active_users,'pending_users'=>$inactive_users);
            
         return response()->json($data);

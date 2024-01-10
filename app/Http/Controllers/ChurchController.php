@@ -44,12 +44,13 @@ class ChurchController extends Controller{
             'is_active'=>1,
             );
             $aid= DB::table('churches')->insertGetId($data);
+            if($request->admins_list){
             $request->admins_list=explode(',', $request->admins_list);
             $updated_info=DB::table('users')
             ->whereIn('id',$request->admins_list)
             ->update([
                 'church_id'=>$aid,
-            ]);
+            ]);}
 
         if ($aid) { 
                 $data = array('status' => true, 'msg' => 'Church added successfully');
@@ -63,7 +64,7 @@ class ChurchController extends Controller{
 
     }
     public function get_churches(REQUEST $request){
-        $church_info = DB::table('churches as c')
+        $query = DB::table('churches as c')
         ->leftJoin('users as u', 'c.id', '=', 'u.church_id')
         ->where('c.is_active', '=', 1)
         ->where('c.deleted', '=', 0)
@@ -81,8 +82,14 @@ class ChurchController extends Controller{
             DB::raw('GROUP_CONCAT(u.id) as admin_ids')
         )
         ->orderBy('c.created_on', 'DESC')
-        ->groupBy('c.id', 'c.admins_count', 'c.email', 'c.image', 'c.location', 'c.mobile_no', 'c.church_name', 'c.users', 'c.pastor_name', 'c.denomination', 'c.language', 'c.city', 'c.country', 'c.address', 'c.website', 'c.is_active', 'c.created_on', 'c.deleted')
-        ->get();
+        ->groupBy('c.id', 'c.admins_count', 'c.email', 'c.image', 'c.location', 'c.mobile_no', 'c.church_name', 'c.users', 'c.pastor_name', 'c.denomination', 'c.language', 'c.city', 'c.country', 'c.address', 'c.website', 'c.is_active', 'c.created_on', 'c.deleted');
+        
+        if ($request['logged_user_type'] == 1) {
+            $church_info = $query->get();
+        } else if ($request['logged_user_type'] == 2) {
+            $church_info = $query->where('c.id', '=', $request['logged_church_id'])->get();
+        }
+
     
     $data = array('status' => true, 'data' => $church_info);
     return response()->json($data);

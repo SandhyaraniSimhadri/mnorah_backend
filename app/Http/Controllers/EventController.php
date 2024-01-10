@@ -60,15 +60,19 @@ class EventController extends Controller{
 
     }
     public function get_events(REQUEST $request){
-        $event_info=DB::table('events as e')
-        ->join('churches as c','c.id', '=','e.church_id')
-        ->where('e.deleted','=',0)
-        ->select('e.*','c.church_name',DB::raW('e.image as avatar'))
-        ->orderBy('e.created_at','DESC')
-        ->get();
-        $data = array('status' => true, 'data' => $event_info);
-        return response()->json($data);
-           
+        $query = DB::table('events as e')
+            ->join('churches as c', 'c.id', '=', 'e.church_id')
+            ->where('e.deleted', '=', 0)
+            ->select('e.*', 'c.church_name', DB::raw('e.image as avatar'))
+            ->orderBy('e.created_at', 'DESC');
+    
+        if ($request['logged_user_type'] == 1) {
+            $event_info = $query->get();
+        } else if ($request['logged_user_type'] == 2) {
+            $event_info = $query->where('e.church_id', '=', $request['logged_church_id'])->get();
+        }
+    
+        return response()->json(['status' => true, 'data' => $event_info]);
     }
 
     public function get_single_event(REQUEST $request){
@@ -77,8 +81,7 @@ class EventController extends Controller{
         ->where('e.id','=',$request->id)
         ->select('e.*','c.church_name',DB::raW('e.image as avatar'))
         ->first();
-        $data = array('status' => true, 'data' => $event_info);        
-        return response()->json($data);
+        return response()->json(['status' => true, 'data' => $event_info]);
     }
     
     public function update_event(REQUEST $request){

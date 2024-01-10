@@ -42,7 +42,7 @@ Route::post('send_sub_admin_invitation', 'AdminController@send_sub_admin_invitat
 
 
 Route::middleware('api_check')->post('add_church', 'ChurchController@add_church');
-Route::get('get_churches', 'ChurchController@get_churches');
+Route::middleware('api_check')->get('get_churches', 'ChurchController@get_churches');
 Route::post('get_single_church', 'ChurchController@get_single_church');
 Route::post('delete_church', 'ChurchController@delete_church');
 Route::get('get_admins_for_new_church', 'ChurchController@get_admins_for_new_church');
@@ -65,46 +65,48 @@ Route::post('get_members_report', 'MembersController@get_members_report');
 Route::post('get_single_feed', 'FeedController@get_single_feed');
 Route::post('delete_feed', 'FeedController@delete_feed');
 Route::post('add_feed', 'FeedController@add_feed');
-Route::get('get_feeds', 'FeedController@get_feeds');
+Route::middleware('api_check')->get('get_feeds', 'FeedController@get_feeds');
 
 
 
 Route::post('get_single_event', 'EventController@get_single_event');
 Route::post('delete_event', 'EventController@delete_event');
 Route::post('add_event', 'EventController@add_event');
-Route::get('get_events', 'EventController@get_events');
+Route::middleware('api_check')->get('get_events', 'EventController@get_events');
 
 
 Route::post('get_single_visitor', 'VisitorController@get_single_visitor');
 Route::post('delete_visitor', 'VisitorController@delete_visitor');
 Route::post('add_visitor', 'VisitorController@add_visitor');
-Route::get('get_visitors', 'VisitorController@get_visitors');
+Route::middleware('api_check')->get('get_visitors', 'VisitorController@get_visitors');
 
 
 Route::post('get_single_testimony', 'TestimonyController@get_single_testimony');
 Route::post('delete_testimony', 'TestimonyController@delete_testimony');
 Route::post('add_testimony', 'TestimonyController@add_testimony');
-Route::get('get_testimony', 'TestimonyController@get_testimony');
+Route::middleware('api_check')->get('get_testimony', 'TestimonyController@get_testimony');
 
 
 Route::post('get_single_life_group', 'LifeGroupController@get_single_life_group');
 Route::post('delete_life_group', 'LifeGroupController@delete_life_group');
 Route::post('add_life_group', 'LifeGroupController@add_life_group');
-Route::get('get_life_groups', 'LifeGroupController@get_life_groups');
-Route::get('get_members_ids', 'LifeGroupController@get_members_ids');
+Route::middleware('api_check')->get('get_life_groups', 'LifeGroupController@get_life_groups');
+Route::middleware('api_check')->get('get_members_ids', 'LifeGroupController@get_members_ids');
 
 
 
 Route::post('get_single_prayer_request', 'PrayerRequestController@get_single_prayer_request');
 Route::post('delete_prayer_request', 'PrayerRequestController@delete_prayer_request');
 Route::post('add_prayer_request', 'PrayerRequestController@add_prayer_request');
-Route::get('get_prayer_requests', 'PrayerRequestController@get_prayer_requests');
+Route::middleware('api_check')->get('get_prayer_requests', 'PrayerRequestController@get_prayer_requests');
 // Route::get('get_members_ids', 'PrayerRequestController@get_members_ids');
 Route::post('get_church_members', 'PrayerRequestController@get_church_members');
 
 Route::middleware('api_check')->get('get_dashboard_members', 'DashboardController@get_dashboard_members');
 
 Route::middleware('api_check')->get('get_dashboard_visitors', 'DashboardController@get_dashboard_visitors');
+
+Route::middleware('api_check')->get('get_subadmin_dashboard_data', 'DashboardController@get_subadmin_dashboard_data');
 
 });
 

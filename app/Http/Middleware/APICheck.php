@@ -26,6 +26,10 @@ class APICheck
                     $request['logged_id'] = $user->id;
                     $request['logged_name'] = $user->user_name;
                     $request['logged_email'] = $user->email;
+                    $request['logged_user_type'] = $user->user_type;
+                    $request['logged_church_id'] = $user->church_id;
+
+
                     return $next($request);
                 } else {
                     return response(array('msg' => 'Token Expired'), 401)
