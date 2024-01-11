@@ -28,7 +28,7 @@ class SubAdminInvitation extends Mailable
      */
     public function build()
     {
-        return $this->data;
+        // return $this->data;
         $subject = 'Invitation';
         return $this->view('emails.sub_admin_invitation')
             ->subject($subject)
