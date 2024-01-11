@@ -184,9 +184,46 @@ class ChurchController extends Controller{
         $updated_info=DB::table('users')
         ->where('church_id',$request->id)
         ->update([
-            'church_id'=>0,
+            'deleted'=>1,
+            'is_active'=>0
+        ]);
+        $updated_info=DB::table('events')
+        ->where('church_id',$request->id)
+        ->update([
+            'deleted'=>1,
         ]);
         
+        $updated_info=DB::table('feeds')
+        ->where('church_id',$request->id)
+        ->update([
+            'deleted'=>1,
+        ]);
+        
+        $updated_info=DB::table('lifegroups')
+        ->where('church_id',$request->id)
+        ->update([
+            'deleted'=>1,
+        ]);
+        
+        $updated_info=DB::table('prayer_requests')
+        ->where('church_id',$request->id)
+        ->update([
+            'deleted'=>1,
+        ]);
+        
+        $updated_info=DB::table('testimony')
+        ->where('church_id',$request->id)
+        ->update([
+            'deleted'=>1,
+        ]);
+
+        $updated_info=DB::table('visitors')
+        ->where('church_id',$request->id)
+        ->update([
+            'deleted'=>1,
+        ]);
+
+
         if($deleted_info){
             $data = array('status' => true, 'msg' => 'Church deleted successfully');
             return response()->json($data);

@@ -182,12 +182,12 @@ class AdminController extends Controller{
         }
     }
     public function delete_admin(REQUEST $request){
-        $users_info==DB::table('users')
+        $users_info=DB::table('users')
         ->where('id','=',$request->id)
         ->select('church_id')
         ->first();
         if($users_info->church_id!=0){
-            $admins_count==DB::table('churches')
+            $admins_count=DB::table('churches')
             ->where('id','=',$users_info->church_id)
             ->select('admins_count')
             ->first();

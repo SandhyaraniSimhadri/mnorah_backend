@@ -60,7 +60,6 @@ Route::post('get_single_member', 'MembersController@get_single_member');
 Route::middleware('api_check')->get('get_members', 'MembersController@get_members');
 Route::middleware('api_check')->post('add_member', 'MembersController@add_member');
 Route::post('delete_member', 'MembersController@delete_member');
-Route::post('get_members_report', 'MembersController@get_members_report');
 
 Route::post('get_single_feed', 'FeedController@get_single_feed');
 Route::post('delete_feed', 'FeedController@delete_feed');
@@ -109,6 +108,8 @@ Route::middleware('api_check')->get('get_dashboard_visitors', 'DashboardControll
 Route::middleware('api_check')->get('get_subadmin_dashboard_data', 'DashboardController@get_subadmin_dashboard_data');
 
 });
+Route::post('get_members_report', 'MembersController@get_members_report');
+
 
 
 
