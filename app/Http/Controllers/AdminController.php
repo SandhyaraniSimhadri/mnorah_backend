@@ -49,6 +49,7 @@ class AdminController extends Controller{
             'last_login'=>$date,
             'church_id' => $request->church_id,
             'user_type' =>2,
+            'is_active'=>1
             );
 
             $aid= DB::table('users')->insertGetId($data);
@@ -224,7 +225,8 @@ class AdminController extends Controller{
         ->update([
             'password' => $md5_password,
             'email_sent' => 1,
-            'email_sent_on' => $current_date
+            'email_sent_on' => $current_date,
+            'is_active'=>1
         ]);
     
         $data = [
