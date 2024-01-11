@@ -35,6 +35,7 @@ class TestimonyController extends Controller{
         $data = array(
             'church_id' => $request->church_id,
             'testimony' => $request->testimony,
+            'title'=>$request->title,
             'image'=>$image,
             );
 
@@ -94,6 +95,7 @@ class TestimonyController extends Controller{
         ->update([
             'church_id' => $request->church_id,
             'testimony' => $request->testimony,
+            'title'=>$request->title
         ]);
         if($update_data){
             $data = array('status' => true, 'msg' => 'Testimony details updated successfully');

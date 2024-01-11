@@ -161,6 +161,7 @@ class MembersController extends Controller{
             'avatar'=>$image,
             'user_name' => $request->user_name,
             'email' => $request->email,
+            'comments' => $request->comments,
             'gender' => $request->gender,
             'dob' => $request->dob,
             'mobile_no' => $request->mobile_no,

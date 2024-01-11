@@ -36,7 +36,7 @@ class PrayerRequestController extends Controller{
             'church_id' => $request->church_id,
             'member_id' => $request->member_id,
             'prayer_request' => $request->prayer_request,
-            'prayer_request_other' => $request->prayer_request_other
+            'description' => $request->description
             );
 
             $aid= DB::table('prayer_requests')->insertGetId($data);
@@ -101,7 +101,7 @@ class PrayerRequestController extends Controller{
             'church_id' => $request->church_id,
             'member_id' => $request->member_id,
             'prayer_request' => $request->prayer_request,
-            'prayer_request_other' => $request->prayer_request_other
+            'description' => $request->description
         ]);
         if($update_data){
             $data = array('status' => true, 'msg' => 'Prayer request details updated successfully');
