@@ -7,11 +7,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use App\Imports\VisitorsImport;
 use App;
-
+use Response;
 
 
 use App\Services\UserDataService;
@@ -151,5 +152,77 @@ public function delete_visitor(REQUEST $request){
         return response()->json($data);
     }
 }
+public function file_import(Request $request) 
+{
+    $collection = Excel::toCollection(new VisitorsImport, $request->file('file'))->toArray();
+    $data1 = $collection[0];
+    // return $data1;
+    $date = date('Y-m-d H:i:s');
+    $count=0;
 
+    foreach ($data1 as $visitor) {
+        $visitor_about=null;
+        $visitor_about_other=null;
+        $church_info = DB::table('churches as c')
+        ->where('c.is_active', '=', 1)
+        ->where('c.deleted', '=', 0)
+        ->where('c.church_name','=',$visitor['church_name']) 
+        ->first();
+        if($visitor['how_did_you_hear_about_us']!= 'Invited by a friend or family member' &&  
+        $visitor['how_did_you_hear_about_us']!= 'Online search' && 
+        $visitor['how_did_you_hear_about_us']!= 'Social media' &&
+        $visitor['how_did_you_hear_about_us']!= 'Advertisement' ){
+            $visitor_about = 'Other'; 
+            $visitor_about_other = $visitor['how_did_you_hear_about_us'];
+             
+        }else{
+            $visitor_about = $visitor['how_did_you_hear_about_us'];
+        }
+    if($church_info && $visitor['first_name'] && $visitor['last_name'] && $visitor['email'] && $visitor['phone_number'] && $visitor['city'])
+    {
+        // return true;
+       $count= $count+1;
+  
+        $data = array(
+            'church_id' => $church_info->id,
+            'first_name' => $visitor['first_name'],
+            'last_name' => $visitor['last_name'],
+            'spouse_name' => $visitor['spouse_name'],
+            'child1_name' => $visitor['child_name_1'],
+            'child2_name' => $visitor['child_name_2'],
+            'child3_name' => $visitor['child_name_3'],
+            'child4_name' => $visitor['child_name_4'],
+            'email'=>$visitor['email'],
+            'phone_number' => $visitor['phone_number'],
+            'address' => $visitor['address'],
+            'city' => $visitor['city'],
+            'hear_about' => $visitor_about,
+            'hear_about_other' => $visitor_about_other,
+            // 'hear_about_other' => $visitor->hear_about_other,
+            'visit_date' => $visitor['date_of_visit'],
+            'experience' => $visitor['how_was_your_experience_today'],
+            'about_visit' => $visitor['what_did_you_enjoy_most_about_your_visit'],
+            'suggestions' => $visitor['suggestions_or_improvement'],
+            'prayer_request' => $visitor['prayer_requests'],
+            'comments' => $visitor['additional_comments'],
+            'connection' => $visitor['connection_card']
+            );
+          
+            $aid= DB::table('visitors')->insertGetId($data);}
+            else{
+// return false;
+                continue;
+            }
+        }
+                return json_encode(array('status' => true, 'msg' => 'Visitors data uploaded successfully','count'=>$count));
+            
+    }
+
+    public function download_visitor_sample()
+    {
+        $filepath = public_path('samples/visitor_sample.csv');
+        // return $filepath;
+        return Response::download($filepath);
+    }
 }
+

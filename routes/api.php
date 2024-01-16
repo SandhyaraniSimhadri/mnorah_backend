@@ -109,6 +109,9 @@ Route::middleware('api_check')->get('get_subadmin_dashboard_data', 'DashboardCon
 
 });
 Route::post('get_members_report', 'MembersController@get_members_report');
+Route::post('file_import','VisitorController@file_import');
+Route::get('download_visitor_sample', 'VisitorController@download_visitor_sample');
+
 
 
 
