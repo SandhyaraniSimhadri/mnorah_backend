@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Imports\FeedsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 use App;
-
+use Response;
 
 
 use App\Services\UserDataService;
@@ -126,5 +128,46 @@ public function delete_feed(REQUEST $request){
         return response()->json($data);
     }
 }
+public function feed_file_import(Request $request) 
+{
+    $collection = Excel::toCollection(new FeedsImport, $request->file('file'))->toArray();
+    $data1 = $collection[0];
+    // return $data1;
+    $date = date('Y-m-d H:i:s');
+    $count=0;
 
+    foreach ($data1 as $feed) {
+    
+        $church_info = DB::table('churches as c')
+        ->where('c.is_active', '=', 1)
+        ->where('c.deleted', '=', 0)
+        ->where('c.church_name','=',$feed['church_name']) 
+        ->first();
+   
+    if($church_info && $feed['title'] && $feed['description'])
+    {
+        // return true;
+       $count= $count+1;
+  
+        $data = array(
+            'church_id' => $church_info->id,
+            'title' => $feed['title'],
+            'author' => $feed['author'],
+            'description' => $feed['description'],
+            );
+          
+            $aid= DB::table('feeds')->insertGetId($data);}
+            else{
+                continue;
+            }
+        }
+                return json_encode(array('status' => true, 'msg' => 'Feeds data uploaded successfully','count'=>$count));
+            
+    }
+    public function download_feed_sample()
+    {
+        $filepath = public_path('samples/feed_sample.csv');
+        // return $filepath;
+        return Response::download($filepath);
+    }
 }

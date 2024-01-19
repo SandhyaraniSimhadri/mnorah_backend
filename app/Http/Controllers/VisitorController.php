@@ -152,7 +152,7 @@ public function delete_visitor(REQUEST $request){
         return response()->json($data);
     }
 }
-public function file_import(Request $request) 
+public function visitor_file_import(Request $request) 
 {
     $collection = Excel::toCollection(new VisitorsImport, $request->file('file'))->toArray();
     $data1 = $collection[0];

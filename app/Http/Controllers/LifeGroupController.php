@@ -9,11 +9,10 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
 use App;
-
-
-
+use Response;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\LifeGroupImport;
 use App\Services\UserDataService;
 
 
@@ -132,37 +131,87 @@ class LifeGroupController extends Controller{
             $data = array('status' => false, 'msg' => 'Failed');
             return response()->json($data);
         }
-}
-public function delete_life_group(REQUEST $request){
-    $deleted_info=DB::table('lifegroups')
-    ->where('id','=',$request->id)
-    ->update([
-        'deleted'=>1,
-    ]);
- 
-    if($deleted_info){
-        $data = array('status' => true, 'msg' => 'Lifegroup deleted successfully');
-        return response()->json($data);
-        } 
-    else {
-        // return true;
-        $data = array('status' => false, 'msg' => 'Failed');
+    }
+    public function delete_life_group(REQUEST $request){
+        $deleted_info=DB::table('lifegroups')
+        ->where('id','=',$request->id)
+        ->update([
+            'deleted'=>1,
+        ]);
+    
+        if($deleted_info){
+            $data = array('status' => true, 'msg' => 'Lifegroup deleted successfully');
+            return response()->json($data);
+            } 
+        else {
+            // return true;
+            $data = array('status' => false, 'msg' => 'Failed');
+            return response()->json($data);
+        }
+    }
+    public function get_members_ids(REQUEST $request){
+
+        $query=DB::table('users as u')
+        ->join('churches as c','u.church_id','=','c.id')
+        ->where('u.user_type','=',3)
+        ->where('u.deleted','=',0)
+        ->select('u.id','u.user_name','c.church_name')
+        ->orderBy('created_at','DESC');
+
+        if ($request['logged_user_type'] == 1) {
+            $member_info = $query->get();
+        } else if ($request['logged_user_type'] == 2) {
+            $member_info = $query->where('u.church_id', '=', $request['logged_church_id'])->get();
+        }
+
+        $data = array('status' => true, 'data' => $member_info);
+        
         return response()->json($data);
     }
-}
-public function get_members_ids(REQUEST $request){
-    $member_info=DB::table('users as u')
-    ->join('churches as c','u.church_id','=','c.id')
-    ->where('u.user_type','=',3)
-    ->where('u.deleted','=',0)
-    ->select('u.id','u.user_name','c.church_name')
-    ->orderBy('created_at','DESC')
-    ->get();
 
-    $data = array('status' => true, 'data' => $member_info);
-       
-    return response()->json($data);
+    public function lifegroup_file_import(Request $request) 
+    {
+        $collection = Excel::toCollection(new LifegroupImport, $request->file('file'))->toArray();
+        $data1 = $collection[0];
+        // return $data1;
+        $date = date('Y-m-d H:i:s');
+        $count=0;
 
-}
+        foreach ($data1 as $lifegroup) {
+    
+            $church_info = DB::table('churches as c')
+            ->where('c.is_active', '=', 1)
+            ->where('c.deleted', '=', 0)
+            ->where('c.church_name','=',$lifegroup['church_name']) 
+            ->first();
+            $array = explode(',', $lifegroup['members']);
+            
+
+            if($church_info && $lifegroup['country'] && $lifegroup['city'] && $lifegroup['area'])
+            {
+                $count= $count+1;
+                $data = array(
+                    'church_id' => $church_info->id,
+                    'country' => $lifegroup['country'],
+                    'city' => $lifegroup['city'],
+                    'area' => $lifegroup['area'],
+                    'members' => $lifegroup['members'],
+                    'members_count' => count($array)
+                    );
+                
+                $aid= DB::table('lifegroups')->insertGetId($data);}
+            else{
+                continue;
+            }
+        }
+        return json_encode(array('status' => true, 'msg' => 'Lifegroups data uploaded successfully','count'=>$count));
+            
+    }
+    public function download_lifegroup_sample()
+    {
+        $filepath = public_path('samples/lifegroup_sample.csv');
+        // return $filepath;
+        return Response::download($filepath);
+    }
 
 }

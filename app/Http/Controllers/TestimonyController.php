@@ -9,8 +9,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Imports\TestimonyImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 use App;
+use Response;
 
 
 
@@ -106,23 +109,65 @@ class TestimonyController extends Controller{
             $data = array('status' => false, 'msg' => 'Failed');
             return response()->json($data);
         }
-}
-public function delete_testimony(REQUEST $request){
-    $deleted_info=DB::table('testimony')
-    ->where('id','=',$request->id)
-    ->update([
-        'deleted'=>1,
-    ]);
- 
-    if($deleted_info){
-        $data = array('status' => true, 'msg' => 'Testimony deleted successfully');
-        return response()->json($data);
-        } 
-    else {
-        // return true;
-        $data = array('status' => false, 'msg' => 'Failed');
-        return response()->json($data);
     }
-}
+    public function delete_testimony(REQUEST $request){
+        $deleted_info=DB::table('testimony')
+        ->where('id','=',$request->id)
+        ->update([
+            'deleted'=>1,
+        ]);
+    
+        if($deleted_info){
+            $data = array('status' => true, 'msg' => 'Testimony deleted successfully');
+            return response()->json($data);
+            } 
+        else {
+            // return true;
+            $data = array('status' => false, 'msg' => 'Failed');
+            return response()->json($data);
+        }
+    }
+    public function testimony_file_import(Request $request) 
+    {
+        $collection = Excel::toCollection(new TestimonyImport, $request->file('file'))->toArray();
+        $data1 = $collection[0];
+        // return $data1;
+        $date = date('Y-m-d H:i:s');
+        $count=0;
+
+        foreach ($data1 as $testimony) {
+    
+            $church_info = DB::table('churches as c')
+            ->where('c.is_active', '=', 1)
+            ->where('c.deleted', '=', 0)
+            ->where('c.church_name','=',$testimony['church_name']) 
+            ->first();
+   
+            if($church_info && $testimony['title'] && $testimony['testimony'])
+            {
+        // return true;
+                $count= $count+1;
+        
+                $data = array(
+                    'church_id' => $church_info->id,
+                    'title' => $testimony['title'],
+                    'testimony' => $testimony['testimony'],
+                    );
+                
+                $aid= DB::table('testimony')->insertGetId($data);}
+            else{
+                continue;
+            }
+        }
+                return json_encode(array('status' => true, 'msg' => 'Testimony data uploaded successfully','count'=>$count));
+            
+    }
+    public function download_testimony_sample()
+    {
+        $filepath = public_path('samples/testimony_sample.csv');
+        // return $filepath;
+        return Response::download($filepath);
+    }
+
 
 }

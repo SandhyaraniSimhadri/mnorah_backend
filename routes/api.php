@@ -109,8 +109,25 @@ Route::middleware('api_check')->get('get_subadmin_dashboard_data', 'DashboardCon
 
 });
 Route::post('get_members_report', 'MembersController@get_members_report');
-Route::post('file_import','VisitorController@file_import');
+Route::post('visitor_file_import','VisitorController@visitor_file_import');
+Route::post('feed_file_import','FeedController@feed_file_import');
+Route::post('testimony_file_import','TestimonyController@testimony_file_import');
+Route::post('lifegroup_file_import','LifeGroupController@lifegroup_file_import');
+Route::post('event_file_import','EventController@event_file_import');
+Route::post('member_file_import','MembersController@member_file_import');
+Route::post('prayer_request_file_import','PrayerRequestController@prayer_request_file_import');
+
+
+
+
 Route::get('download_visitor_sample', 'VisitorController@download_visitor_sample');
+Route::get('download_member_sample', 'MembersController@download_member_sample');
+Route::get('download_testimony_sample', 'TestimonyController@download_testimony_sample');
+Route::get('download_feed_sample', 'FeedController@download_feed_sample');
+Route::get('download_lifegroup_sample', 'LifeGroupController@download_lifegroup_sample');
+Route::get('download_event_sample', 'EventController@download_event_sample');
+Route::get('download_prayer_request_sample', 'PrayerRequestController@download_prayer_request_sample');
+
 
 
 

@@ -13,6 +13,9 @@ use Carbon\Carbon;
 use App;
 use App\Exports\MemberReportsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Response;
+use App\Imports\MembersImport;
+
 
 
 use App\Services\UserDataService;
@@ -215,5 +218,104 @@ class MembersController extends Controller{
     
         return Excel::download(new MemberReportsExport($rows), 'reports' . '.csv');
     }
+    public function download_member_sample()
+    {
+        $filepath = public_path('samples/member_sample.csv');
+        // return $filepath;
+        return Response::download($filepath);
+    }
+    public function member_file_import(Request $request) 
+    {
+        $collection = Excel::toCollection(new MembersImport, $request->file('file'))->toArray();
+        $data1 = $collection[0];
+        // return $data1;
+        $date = date('Y-m-d H:i:s');
+        $count=0;
+
+        foreach ($data1 as $member) {
+            $membership_status=null;
+            $membership_status_other=null;
+            $hear_about=null;
+            $hear_about_other=null;
+            $involvement_and_interest=null;
+            $invovlement_interest_volunteering=null;
+            $church_info = DB::table('churches as c')
+            ->where('c.is_active', '=', 1)
+            ->where('c.deleted', '=', 0)
+            ->where('c.church_name','=',$member['church_name']) 
+            ->first();
+
+            if($member['membership_status']!= 'New Member' &&  
+            $member['membership_status']!= 'Returning Member' && 
+            $member['membership_status']!= 'Visitor'){
+                $membership_status = 'Other'; 
+                $membership_status_other = $member['membership_status'];
+                 
+            }else{
+                $membership_status = $member['membership_status'];
+            }
+
+
+            if($member['how_did_you_hear_about_our_church']!= 'Word of Mouth' &&  
+            $member['how_did_you_hear_about_our_church']!= 'Website' && 
+            $member['how_did_you_hear_about_our_church']!= 'Social Media' && 
+            $member['how_did_you_hear_about_our_church']!= 'Invitation'){
+                $hear_about = 'Other'; 
+                $hear_about_other = $member['how_did_you_hear_about_our_church'];
+                 
+            }else{
+                $hear_about_other = $member['how_did_you_hear_about_our_church'];
+            }
+
+
+            if($member['involvement_and_interests']!= 'Ushering' &&  
+            $member['involvement_and_interests']!= "Children's Ministry" && 
+            $member['involvement_and_interests']!= 'Music Ministry' && 
+            $member['involvement_and_interests']!= 'Sunday School'  && 
+            $member['involvement_and_interests']!= 'Sunday Service' && $member['involvement_and_interests']!= 'Bible Study' &&  
+            $member['involvement_and_interests']!= "Fellowship Events" && 
+            $member['involvement_and_interests']!= 'Community Outreach'){
+                $involvement_and_interest = 'Other'; 
+                $invovlement_interest_volunteering = $member['involvement_and_interests'];
+                 
+            }else{
+                $invovlement_interest_volunteering = $member['involvement_and_interests'];
+            }
+
+
+
+            
+        if($church_info && $member['full_name'] && $member['gender'] && $member['phone_number'] && $member['email'])
+        {
+            // return true;
+        $count= $count+1;
     
+            $data = array(
+                'user_name' => $member['full_name'],
+                'email' => $member['email'],
+                'gender' => $member['gender'],
+                'dob' => $member['date_of_birth'],
+                'location' =>  $member['city'],
+                'mobile_no' => $member['phone_number'],
+                'user_type' => 3,
+                'is_active' =>1,
+                'state' =>  $member['state'],
+                'membership_status' => $membership_status,
+                'membership_status_other' => $membership_status_other,
+                'hear_about_church' => $hear_about,
+                'hear_about_church_other' => $hear_about_other,
+                'invovlement_interest' => $involvement_and_interest,
+                'invovlement_interest_volunteering' => $invovlement_interest_volunteering,
+                'church_id' => $church_info->id,
+                'comments' => $member['additional_comments'],
+                );
+            
+                $aid= DB::table('users')->insertGetId($data);}
+                else{
+                    continue;
+                }
+            }
+        return json_encode(array('status' => true, 'msg' => 'Members data uploaded successfully','count'=>$count));
+                
+    }
 }
