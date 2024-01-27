@@ -6,7 +6,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Support\Collection;
 
-class MemberReportsExport implements FromCollection, WithHeadings
+class MembersReportExport implements FromCollection, WithHeadings
 {
     protected $rows;
 
@@ -34,6 +34,7 @@ class MemberReportsExport implements FromCollection, WithHeadings
                     }
                     $formattedData[] = [
                         'S.No' => $i, 
+                        'Member Id' => $row['id'],
                         'Church Name' => $row['church_name'],
                         'Member Name' => $row['user_name'],
                         'Gender' => $row['gender'],
@@ -58,6 +59,7 @@ class MemberReportsExport implements FromCollection, WithHeadings
     {
         return [
             'S.No',
+            'Member Id',
             'Church Name',
             'Member Name',
             'Gender',

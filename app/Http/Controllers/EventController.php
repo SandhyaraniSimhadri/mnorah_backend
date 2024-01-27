@@ -14,6 +14,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App;
 use Response;
 use App\Services\UserDataService;
+use App\Exports\EventsReportExport;
 
 
 class EventController extends Controller{
@@ -193,5 +194,16 @@ class EventController extends Controller{
         return Response::download($filepath);
     }
 
-
+    public function get_events_report(Request $request)
+    {
+        // Assuming 'rows' is an array in the request
+        $rows = $request->input('rows');
+        // return $rows;
+        // Additional validation if needed
+        if (!is_array($rows)) {
+            return response()->json(['error' => 'Invalid data format'], 400);
+        }
+    
+        return Excel::download(new EventsReportExport($rows), 'reports' . '.csv');
+    }
 }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Imports\TestimonyImport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TestimoniesReportExport;
 
 use App;
 use Response;
@@ -168,6 +169,17 @@ class TestimonyController extends Controller{
         // return $filepath;
         return Response::download($filepath);
     }
-
+    public function get_testimonies_report(Request $request)
+    {
+        // Assuming 'rows' is an array in the request
+        $rows = $request->input('rows');
+        // return $rows;
+        // Additional validation if needed
+        if (!is_array($rows)) {
+            return response()->json(['error' => 'Invalid data format'], 400);
+        }
+    
+        return Excel::download(new TestimoniesReportExport($rows), 'reports' . '.csv');
+    }
 
 }

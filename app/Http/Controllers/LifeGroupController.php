@@ -14,6 +14,7 @@ use Response;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\LifeGroupImport;
 use App\Services\UserDataService;
+use App\Exports\LifegroupsReportExport;
 
 
 class LifeGroupController extends Controller{
@@ -213,5 +214,17 @@ class LifeGroupController extends Controller{
         // return $filepath;
         return Response::download($filepath);
     }
-
+    public function get_life_groups_report(Request $request)
+    {
+        // Assuming 'rows' is an array in the request
+        $rows = $request->input('rows');
+        // return $rows;
+        // Additional validation if needed
+        if (!is_array($rows)) {
+            return response()->json(['error' => 'Invalid data format'], 400);
+        }
+    
+        return Excel::download(new LifegroupsReportExport($rows), 'reports' . '.csv');
+    }
+    
 }

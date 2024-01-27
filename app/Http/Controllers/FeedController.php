@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Imports\FeedsImport;
+use App\Exports\FeedsReportExport;
+
 use Maatwebsite\Excel\Facades\Excel;
 
 use App;
@@ -169,5 +171,17 @@ public function feed_file_import(Request $request)
         $filepath = public_path('samples/feed_sample.csv');
         // return $filepath;
         return Response::download($filepath);
+    }
+    public function get_feeds_report(Request $request)
+    {
+        // Assuming 'rows' is an array in the request
+        $rows = $request->input('rows');
+        // return $rows;
+        // Additional validation if needed
+        if (!is_array($rows)) {
+            return response()->json(['error' => 'Invalid data format'], 400);
+        }
+    
+        return Excel::download(new FeedsReportExport($rows), 'reports' . '.csv');
     }
 }

@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Imports\VisitorsImport;
 use App;
 use Response;
+use App\Exports\VisitorsReportExport;
 
 
 use App\Services\UserDataService;
@@ -223,6 +224,18 @@ public function visitor_file_import(Request $request)
         $filepath = public_path('samples/visitor_sample.csv');
         // return $filepath;
         return Response::download($filepath);
+    }
+    public function get_visitors_report(Request $request)
+    {
+        // Assuming 'rows' is an array in the request
+        $rows = $request->input('rows');
+        // return $rows;
+        // Additional validation if needed
+        if (!is_array($rows)) {
+            return response()->json(['error' => 'Invalid data format'], 400);
+        }
+    
+        return Excel::download(new VisitorsReportExport($rows), 'reports' . '.csv');
     }
 }
 

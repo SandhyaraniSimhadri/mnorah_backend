@@ -108,7 +108,18 @@ Route::middleware('api_check')->get('get_dashboard_visitors', 'DashboardControll
 Route::middleware('api_check')->get('get_subadmin_dashboard_data', 'DashboardController@get_subadmin_dashboard_data');
 
 });
+
+
 Route::post('get_members_report', 'MembersController@get_members_report');
+Route::post('get_feeds_report', 'FeedController@get_feeds_report');
+Route::post('get_visitors_report', 'VisitorController@get_visitors_report');
+Route::post('get_testimonies_report', 'TestimonyController@get_testimonies_report');
+Route::post('get_events_report', 'EventController@get_events_report');
+Route::post('get_life_groups_report', 'LifeGroupController@get_life_groups_report');
+Route::post('get_prayer_requests_report', 'PrayerRequestController@get_prayer_requests_report');
+
+
+
 Route::post('visitor_file_import','VisitorController@visitor_file_import');
 Route::post('feed_file_import','FeedController@feed_file_import');
 Route::post('testimony_file_import','TestimonyController@testimony_file_import');

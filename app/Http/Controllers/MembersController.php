@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 use App;
-use App\Exports\MemberReportsExport;
+use App\Exports\MembersReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Response;
 use App\Imports\MembersImport;
@@ -216,7 +216,7 @@ class MembersController extends Controller{
             return response()->json(['error' => 'Invalid data format'], 400);
         }
     
-        return Excel::download(new MemberReportsExport($rows), 'reports' . '.csv');
+        return Excel::download(new MembersReportExport($rows), 'reports' . '.csv');
     }
     public function download_member_sample()
     {

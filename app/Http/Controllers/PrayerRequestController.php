@@ -16,6 +16,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 use App\Imports\PrayerRequestImport;
 
+use App\Exports\PrayerRequestsReportExport;
+
 use App\Services\UserDataService;
 
 
@@ -155,7 +157,7 @@ class PrayerRequestController extends Controller{
         $count=0;
 
         foreach ($data1 as $prayer_request) {
-            $prayer_request=null;
+            $prayer_request_val=null;
             $church_info = DB::table('churches as c')
             ->where('c.is_active', '=', 1)
             ->where('c.deleted', '=', 0)
@@ -173,20 +175,20 @@ class PrayerRequestController extends Controller{
             $prayer_request['prayer_request']!= 'Guidance and Decision-Making' && 
             $prayer_request['prayer_request']!= 'Mission and Outreach'){
                
-                $prayer_request =  'Other';
+                $prayer_request_val =  'Other';
                  
             }else{
-                $prayer_request = $prayer_request['prayer_request'];
+                $prayer_request_val = $prayer_request['prayer_request'];
             }
-
-            if($church_info && $prayer_request['member'] && $prayer_request && $prayer_request['description'])
+            // return $prayer_request;
+            if( $church_info && $prayer_request['member'] && $prayer_request && $prayer_request['description'])
             {
                 $count= $count+1;
         
                 $data = array(
                     'church_id' => $church_info->id,
                     'member_id' => $prayer_request['member'],
-                    'prayer_request' => $prayer_request['prayer_request'],
+                    'prayer_request' => $prayer_request_val,
                     'description' => $prayer_request['description']
                     );
                 
@@ -203,5 +205,16 @@ class PrayerRequestController extends Controller{
         $filepath = public_path('samples/prayer_request_sample.csv');
         return Response::download($filepath);
     }
-
+    public function get_prayer_requests_report(Request $request)
+    {
+        // Assuming 'rows' is an array in the request
+        $rows = $request->input('rows');
+        // return $rows;
+        // Additional validation if needed
+        if (!is_array($rows)) {
+            return response()->json(['error' => 'Invalid data format'], 400);
+        }
+    
+        return Excel::download(new PrayerRequestsReportExport($rows), 'reports' . '.csv');
+    }
 }
