@@ -107,6 +107,17 @@ Route::middleware('api_check')->get('get_dashboard_visitors', 'DashboardControll
 
 Route::middleware('api_check')->get('get_subadmin_dashboard_data', 'DashboardController@get_subadmin_dashboard_data');
 
+Route::get('get_modules', 'RolesAndPermissionsController@get_modules');
+
+Route::middleware('api_check')->post('add_role_permissions', 'RolesAndPermissionsController@add_role_permissions');
+
+Route::middleware('api_check')->post('get_roles', 'RolesAndPermissionsController@get_roles');
+Route::middleware('api_check')->post('get_single_role', 'RolesAndPermissionsController@get_single_role');
+Route::middleware('api_check')->post('delete_role', 'RolesAndPermissionsController@delete_role');
+Route::post('update_role', 'RolesAndPermissionsController@update_role');
+
+
+
 });
 
 
@@ -138,7 +149,6 @@ Route::get('download_feed_sample', 'FeedController@download_feed_sample');
 Route::get('download_lifegroup_sample', 'LifeGroupController@download_lifegroup_sample');
 Route::get('download_event_sample', 'EventController@download_event_sample');
 Route::get('download_prayer_request_sample', 'PrayerRequestController@download_prayer_request_sample');
-
 
 
 
