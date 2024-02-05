@@ -203,7 +203,7 @@ public function visitor_file_import(Request $request)
             'visit_date' => $visitor['date_of_visit'],
             'experience' => $visitor['how_was_your_experience_today'],
             'about_visit' => $visitor['what_did_you_enjoy_most_about_your_visit'],
-            'suggestions' => $visitor['suggestions_or_improvement'],
+            'suggestions' => $visitor['suggestions_for_improvement'],
             'prayer_request' => $visitor['prayer_requests'],
             'comments' => $visitor['additional_comments'],
             'connection' => $visitor['connection_card']

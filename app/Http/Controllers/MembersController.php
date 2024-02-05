@@ -287,6 +287,7 @@ class MembersController extends Controller{
             
         if($church_info && $member['full_name'] && $member['gender'] && $member['phone_number'] && $member['email'])
         {
+            // return $member['date_of_birth'];
             // return true;
         $count= $count+1;
     
