@@ -308,7 +308,7 @@ class MembersController extends Controller{
                 'invovlement_interest' => $involvement_and_interest,
                 'invovlement_interest_volunteering' => $invovlement_interest_volunteering,
                 'church_id' => $church_info->id,
-                'comments' => $member['additional_comments'],
+                'comments' => $member['additional_comments_or_questions'],
                 );
             
                 $aid= DB::table('users')->insertGetId($data);}
