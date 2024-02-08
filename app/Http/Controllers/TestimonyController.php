@@ -38,6 +38,7 @@ class TestimonyController extends Controller{
         $date = date('Y-m-d H:i:s');
         $data = array(
             'church_id' => $request->church_id,
+            'member_id' => $request->member_id,
             'testimony' => $request->testimony,
             'title'=>$request->title,
             'image'=>$image,
@@ -58,9 +59,15 @@ class TestimonyController extends Controller{
     }
     public function get_testimony(REQUEST $request){
         $query=DB::table('testimony as t')
-        ->join('churches as c','t.church_id', '=','c.id')
+        ->leftJoin('churches as c','t.church_id', '=','c.id')
+        ->leftJoin('users as u','t.member_id', '=','u.id')
         ->where('t.deleted','=',0)
-        ->select('t.*','c.church_name',DB::raW('t.image as avatar'))
+        ->where('c.deleted','=',0)
+        ->where(function ($query) {
+            $query->where('u.deleted', '=', 0)
+                  ->orWhereNull('u.deleted'); 
+        })
+        ->select('t.*','c.church_name','u.user_name',DB::raW('t.image as avatar'))
         ->orderBy('t.created_at','DESC');
 
 
@@ -76,9 +83,16 @@ class TestimonyController extends Controller{
 
     public function get_single_testimony(REQUEST $request){
         $testimony_info=DB::table('testimony as t')
-        ->join('churches as c','t.church_id', '=','c.id')
+        ->leftJoin('churches as c','t.church_id', '=','c.id')
+        ->leftJoin('users as u','t.member_id', '=','u.id')
         ->where('t.id','=',$request->id)
-        ->select('t.*','c.church_name',DB::raW('t.image as avatar'))
+        ->where('t.deleted','=',0)
+        ->where('c.deleted','=',0)
+        ->where(function ($query) {
+            $query->where('u.deleted', '=', 0)
+                  ->orWhereNull('u.deleted'); 
+        })
+        ->select('t.*','c.church_name','u.user_name',DB::raW('t.image as avatar'))
         ->first();
 
         $data = array('status' => true, 'data' => $testimony_info);
@@ -98,6 +112,7 @@ class TestimonyController extends Controller{
         ->where('id','=',$request->id)
         ->update([
             'church_id' => $request->church_id,
+            'member_id' => $request->member_id,
             'testimony' => $request->testimony,
             'title'=>$request->title
         ]);
@@ -151,6 +166,7 @@ class TestimonyController extends Controller{
         
                 $data = array(
                     'church_id' => $church_info->id,
+                    'member_id' => $testimony['member'],
                     'title' => $testimony['title'],
                     'testimony' => $testimony['testimony'],
                     );

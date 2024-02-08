@@ -26,6 +26,7 @@ class TestimoniesReportExport implements FromCollection, WithHeadings
                     $formattedData[] = [
                         'S.No' => $i, 
                         'Testimony Id' => $row['id'],
+                        'Church Id' => $row['church_id'],
                         'Church Name' => $row['church_name'],
                         'Title' => $row['title'],
                         'Testimony' => $row['testimony']
@@ -42,6 +43,7 @@ class TestimoniesReportExport implements FromCollection, WithHeadings
         return [
             'S.No',
             'Testimony Id',
+            'Church Id',
             'Church Name',
             'Title',
             'Testimony',

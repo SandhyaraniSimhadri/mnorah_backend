@@ -26,6 +26,7 @@ class EventsReportExport implements FromCollection, WithHeadings
                     $formattedData[] = [
                         'S.No' => $i, 
                         'Event Id' =>$row['id'],
+                        'Church Id' => $row['church_id'],
                         'Church Name' => $row['church_name'],
                         'Event Name' => $row['event_name'],
                         'Event Type' => $row['event_type'],
@@ -54,6 +55,7 @@ class EventsReportExport implements FromCollection, WithHeadings
         return [
             'S.No',
             'Event Id',
+            'Church Id',
             'Church Name',
             'Event Name',
             'Event Type',

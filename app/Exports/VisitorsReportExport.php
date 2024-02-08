@@ -31,6 +31,7 @@ class VisitorsReportExport implements FromCollection, WithHeadings
                     $formattedData[] = [
                         'S.No' => $i, 
                         'Visitor Id' => $row['id'],
+                        'Church Id' => $row['church_id'],
                         'Church Name' => $row['church_name'],
                         'Visitor Name' => $row['first_name'].' '.$row['last_name'],
                         'Child 1 Name' => $row['child1_name'],
@@ -61,6 +62,7 @@ class VisitorsReportExport implements FromCollection, WithHeadings
         return [
             'S.No', 
             'Visitor Id',
+            'Church Id',
             'Church Name',
             'Visitor Name',
             'Child 1 Name',

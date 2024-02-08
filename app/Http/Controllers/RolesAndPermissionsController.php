@@ -29,7 +29,7 @@ class RolesAndPermissionsController extends Controller{
     {
     //  return $request;
        $total_data = json_decode($request->role_permissions, true);
-    //    return $total_data[0]['read'];
+  
         $date = date('Y-m-d H:i:s');
         $data = array(
             'church_id' => $request->church_id,

@@ -26,6 +26,7 @@ class PrayerRequestsReportExport implements FromCollection, WithHeadings
                     $formattedData[] = [
                         'S.No' => $i, 
                         'Prayer Request Id' => $row['id'],
+                        'Church Id' => $row['church_id'],
                         'Church Name' => $row['church_name'],
                         'Name' => $row['user_name'],
                         'Prayer Request' => $row['prayer_request'],
@@ -43,6 +44,7 @@ class PrayerRequestsReportExport implements FromCollection, WithHeadings
         return [
             'S.No',
             'Prayer Request Id',
+            'Church Id',
             'Church Name',
             'Member Name',
             'Prayer Request',

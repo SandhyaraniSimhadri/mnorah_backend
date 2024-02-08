@@ -18,8 +18,9 @@ class TestimonyImport implements ToCollection, WithHeadingRow
             // You can perform database inserts or any other logic here
             return [
                 'church_id' => $row[0],
-                'title' =>$row[1],
-                'testimony' => $row[2]
+                'select_member' =>$row[1],
+                'title' =>$row[2],
+                'testimony' => $row[3]
             ];
 
            

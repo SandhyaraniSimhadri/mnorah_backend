@@ -93,7 +93,7 @@ class MembersController extends Controller{
         ->leftJoin('churches as c','u.church_id', '=','c.id')
         ->where('u.deleted','=',0)
         ->where('u.user_type','=',3)
-        ->select('u.*','c.church_name',DB::raW('u.avatar as avatar'))
+        ->select('u.*','c.church_name',DB::raW('u.avatar as avatar'),DB::raW('u.id as member_id'))
         ->orderBy('u.created_at','DESC');
 
         if ($request['logged_user_type'] == 1) {

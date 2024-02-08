@@ -18,10 +18,11 @@ class LifegroupImport implements ToCollection, WithHeadingRow
             // You can perform database inserts or any other logic here
             return [
                 'church_id' => $row[0],
-                'country' =>$row[1],
-                'city' => $row[2],
-                'area' => $row[3],
-                'members' => $row[4],
+                'leader' => $row[1],
+                'country' =>$row[2],
+                'city' => $row[3],
+                'area' => $row[4],
+                'members' => $row[5],
 
             ];
 

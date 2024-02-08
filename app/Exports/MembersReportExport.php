@@ -35,6 +35,7 @@ class MembersReportExport implements FromCollection, WithHeadings
                     $formattedData[] = [
                         'S.No' => $i, 
                         'Member Id' => $row['id'],
+                        'Church Id' => $row['church_id'],
                         'Church Name' => $row['church_name'],
                         'Member Name' => $row['user_name'],
                         'Gender' => $row['gender'],
@@ -60,6 +61,7 @@ class MembersReportExport implements FromCollection, WithHeadings
         return [
             'S.No',
             'Member Id',
+            'Church Id',
             'Church Name',
             'Member Name',
             'Gender',

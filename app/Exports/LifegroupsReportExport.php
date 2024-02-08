@@ -33,6 +33,7 @@ class LifegroupsReportExport implements FromCollection, WithHeadings
                     $formattedData[] = [
                         'S.No' => $i, 
                         'Lifegroup Id' => $row['id'],
+                        'Church Id' => $row['church_id'],
                         'Church Name' => $row['church_name'],
                         'Country' => $row['country'],
                         'City' => $row['city'],
@@ -51,6 +52,7 @@ class LifegroupsReportExport implements FromCollection, WithHeadings
         return [
             'S.No',
             'Lifegroup Id',
+            'Church Id',
             'Church Name',
             'Country',
             'City',

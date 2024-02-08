@@ -26,6 +26,7 @@ class FeedsReportExport implements FromCollection, WithHeadings
                     $formattedData[] = [
                         'S.No' => $i, 
                         'Feed Id' => $row['id'],
+                        'Church Id' => $row['church_id'],
                         'Church Name' => $row['church_name'],
                         'Title' => $row['title'],
                         'Author' => $row['author'],
@@ -43,6 +44,7 @@ class FeedsReportExport implements FromCollection, WithHeadings
         return [
             'S.No',
             'Feed Id',
+            'Church Id',
             'Church Name',
             'Title',
             'Author',

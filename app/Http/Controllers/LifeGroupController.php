@@ -33,6 +33,7 @@ class LifeGroupController extends Controller{
             'country' => $request->country,
             'city' => $request->city,
             'area' => $request->area,
+            'leader' => $request->leader,
             'members_count' => $request->members_count,
             'members' => $request->members,
             );
@@ -61,9 +62,15 @@ class LifeGroupController extends Controller{
         // return response()->json($data);
 
         $query=DB::table('lifegroups as l')
-        ->join('churches as c','l.church_id', '=','c.id')
+        ->leftJoin('churches as c','l.church_id', '=','c.id')
+        ->leftJoin('users as u','l.leader', '=','u.id')
         ->where('l.deleted','=',0)
-        ->select('l.*','c.church_name',DB::raW('l.image as avatar'))
+        ->where('c.deleted','=',0)
+        ->where(function ($query) {
+            $query->where('u.deleted', '=', 0)
+                  ->orWhereNull('u.deleted'); 
+        })
+        ->select('l.*','u.user_name','c.church_name',DB::raW('l.image as avatar'))
         ->orderBy('l.created_at','DESC');
 
         if ($request['logged_user_type'] == 1) {
@@ -78,9 +85,16 @@ class LifeGroupController extends Controller{
 
     public function get_single_life_group(REQUEST $request){
         $life_groups_info=DB::table('lifegroups as l')
-        ->join('churches as c','l.church_id', '=','c.id')
+        ->leftJoin('churches as c','l.church_id', '=','c.id')
+        ->leftJoin('users as u','l.leader', '=','u.id')
         ->where('l.id','=',$request->id)
-        ->select('l.*','c.church_name',DB::raW('l.image as avatar'))
+        ->where('c.deleted','=',0)
+        ->where(function ($query) {
+            $query->where('u.deleted', '=', 0)
+                  ->orWhereNull('u.deleted'); 
+        })
+        ->where('l.deleted','=',0)
+        ->select('l.*','c.church_name','u.user_name',DB::raW('l.image as avatar'))
         ->first();
 
         if ($life_groups_info) {
@@ -116,6 +130,7 @@ class LifeGroupController extends Controller{
         ->update([
             'church_id' => $request->church_id,
             'country' => $request->country,
+            'leader' => $request->leader,
             'city' => $request->city,
             'area' => $request->area,
             'members_count' => $request->members_count,
@@ -188,12 +203,13 @@ class LifeGroupController extends Controller{
             $array = explode(',', $lifegroup['members']);
             
 
-            if($church_info && $lifegroup['country'] && $lifegroup['city'] && $lifegroup['area'])
+            if($church_info && $lifegroup['country'] && $lifegroup['city'] && $lifegroup['area'] && $lifegroup['leader'])
             {
                 $count= $count+1;
                 $data = array(
                     'church_id' => $church_info->id,
                     'country' => $lifegroup['country'],
+                    'leader' => $lifegroup['leader'],
                     'city' => $lifegroup['city'],
                     'area' => $lifegroup['area'],
                     'members' => $lifegroup['members'],

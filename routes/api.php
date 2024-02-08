@@ -36,7 +36,7 @@ Route::post('update_password', 'UsersController@update_password');
 Route::middleware('api_check')->post('add_subadmin', 'AdminController@add_subadmin');
 Route::middleware('api_check')->get('get_admins', 'AdminController@get_admins');
 Route::post('delete_admin', 'AdminController@delete_admin');
-Route::post('get_single_admin', 'AdminController@get_single_admin');
+Route::middleware('api_check')->post('get_single_admin', 'AdminController@get_single_admin');
 Route::post('send_sub_admin_invitation', 'AdminController@send_sub_admin_invitation');
 
 
@@ -111,7 +111,7 @@ Route::get('get_modules', 'RolesAndPermissionsController@get_modules');
 
 Route::middleware('api_check')->post('add_role_permissions', 'RolesAndPermissionsController@add_role_permissions');
 
-Route::middleware('api_check')->post('get_roles', 'RolesAndPermissionsController@get_roles');
+Route::middleware('api_check')->get('get_roles', 'RolesAndPermissionsController@get_roles');
 Route::middleware('api_check')->post('get_single_role', 'RolesAndPermissionsController@get_single_role');
 Route::middleware('api_check')->post('delete_role', 'RolesAndPermissionsController@delete_role');
 Route::post('update_role', 'RolesAndPermissionsController@update_role');
