@@ -81,8 +81,8 @@ class ChurchController extends Controller{
             DB::raw('GROUP_CONCAT(u.user_name) as admins'),
             DB::raw('GROUP_CONCAT(u.id) as admin_ids')
         )
-        ->orderBy('c.created_on', 'DESC')
-        ->groupBy('c.id', 'c.admins_count', 'c.email', 'c.image', 'c.location', 'c.mobile_no', 'c.church_name', 'c.users', 'c.pastor_name', 'c.denomination', 'c.language', 'c.city', 'c.country', 'c.address', 'c.website', 'c.is_active', 'c.created_on', 'c.deleted');
+        ->orderBy('c.created_at', 'DESC')
+        ->groupBy('c.id', 'c.admins_count', 'c.email', 'c.image', 'c.location', 'c.mobile_no', 'c.church_name', 'c.users', 'c.pastor_name', 'c.denomination', 'c.language', 'c.city', 'c.country', 'c.address', 'c.website', 'c.is_active', 'c.created_at', 'c.deleted');
         
         if ($request['logged_user_type'] == 1) {
             $church_info = $query->get();
@@ -97,6 +97,7 @@ class ChurchController extends Controller{
     public function get_single_church(REQUEST $request){
         $church_info = DB::table('churches as c')
         ->leftJoin('users as u', 'c.id', '=', 'u.church_id')
+        ->leftJoin('countries as co','co.id','=','c.country')
         ->where('c.is_active', '=', 1)
         ->where('c.deleted', '=', 0)
         ->where('c.id','=',$request->id)
@@ -113,12 +114,12 @@ class ChurchController extends Controller{
                   ->orWhereNull('u.deleted');
         })
         ->select(
-            'c.*', DB::raw('c.image as avatar'),
+            'c.*', DB::raw('co.country as country_name'),DB::raw('c.image as avatar'),
             DB::raw('GROUP_CONCAT(u.user_name) as admins'),
             DB::raw('GROUP_CONCAT(u.id) as admin_ids')
         )
-        ->orderBy('c.created_on', 'DESC')
-        ->groupBy('c.id', 'c.admins_count', 'c.email', 'c.image', 'c.location', 'c.mobile_no', 'c.church_name', 'c.users', 'c.pastor_name', 'c.denomination', 'c.language', 'c.city', 'c.country', 'c.address', 'c.website', 'c.is_active', 'c.created_on', 'c.deleted')
+        ->orderBy('c.created_at', 'DESC')
+        ->groupBy('c.id', 'c.admins_count', 'c.email', 'c.image', 'co.country','c.location', 'c.mobile_no', 'c.church_name', 'c.users', 'c.pastor_name', 'c.denomination', 'c.language', 'c.city', 'c.country', 'c.address', 'c.website', 'c.is_active', 'c.created_at', 'c.deleted')
         ->first();
     
     $data = array('status' => true, 'data' => $church_info);

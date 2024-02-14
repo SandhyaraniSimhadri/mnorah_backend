@@ -139,6 +139,7 @@ Route::post('event_file_import','EventController@event_file_import');
 Route::post('member_file_import','MembersController@member_file_import');
 Route::post('prayer_request_file_import','PrayerRequestController@prayer_request_file_import');
 
+Route::post('upload_cities','UsersController@upload_cities');
 
 
 
@@ -149,7 +150,11 @@ Route::get('download_feed_sample', 'FeedController@download_feed_sample');
 Route::get('download_lifegroup_sample', 'LifeGroupController@download_lifegroup_sample');
 Route::get('download_event_sample', 'EventController@download_event_sample');
 Route::get('download_prayer_request_sample', 'PrayerRequestController@download_prayer_request_sample');
+Route::get('get_countries', 'UsersController@get_countries');
+Route::post('get_cities', 'UsersController@get_cities');
 
+
+// Route::get('/backstage/api/1.0/resources/countries/{country_code}/cities', [UsersController::class, 'get_cities']);
 
 
 

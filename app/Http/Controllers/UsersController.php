@@ -10,11 +10,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Mail\ForgotPassword;
-
-
+use App\Imports\citiesImport;
+use Illuminate\Support\Facades\Storage;
 use App;
+use Illuminate\Support\Facades\Http;
 
-
+use Maatwebsite\Excel\Facades\Excel;
 
 use App\Services\UserDataService;
 
@@ -245,5 +246,39 @@ class UsersController extends Controller{
             }
     
         }
+
+        public function get_countries(Request $request)
+        {
+            $result = DB::table('countries')
+                ->where('deleted', '=', 0)
+                ->get();
+
+                // https://backstage.taboola.com/backstage/api/1.0/resources/countries
+
+            return response()->json(['status' => true, 'data' => $result]);
+        }
+     
+    public function get_cities(REQUEST $request)
+    {
+        // $result = DB::table('countries')
+        //         ->where('deleted', '=', 0)
+        //         ->where('country','=',$request->)
+        //         ->first();
+
+        
+        $result = DB::table('cities')
+                ->where('deleted', '=', 0)
+                ->where('country_id', '=', $request->countryCode)
+
+                ->get();
+
+                // https://backstage.taboola.com/backstage/api/1.0/resources/countries
+
+            return response()->json(['status' => true, 'data' => $result]);
     }
+   
+
+    
+}
+    
 

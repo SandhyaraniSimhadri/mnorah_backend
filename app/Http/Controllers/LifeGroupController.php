@@ -64,13 +64,14 @@ class LifeGroupController extends Controller{
         $query=DB::table('lifegroups as l')
         ->leftJoin('churches as c','l.church_id', '=','c.id')
         ->leftJoin('users as u','l.leader', '=','u.id')
+        ->leftJoin('countries as co','co.id','=','l.country')
         ->where('l.deleted','=',0)
         ->where('c.deleted','=',0)
         ->where(function ($query) {
             $query->where('u.deleted', '=', 0)
                   ->orWhereNull('u.deleted'); 
         })
-        ->select('l.*','u.user_name','c.church_name',DB::raW('l.image as avatar'))
+        ->select('l.*',DB::raw('co.country as country_name'),'u.user_name','c.church_name',DB::raW('l.image as avatar'))
         ->orderBy('l.created_at','DESC');
 
         if ($request['logged_user_type'] == 1) {
@@ -86,6 +87,7 @@ class LifeGroupController extends Controller{
     public function get_single_life_group(REQUEST $request){
         $life_groups_info=DB::table('lifegroups as l')
         ->leftJoin('churches as c','l.church_id', '=','c.id')
+        ->leftJoin('countries as co','co.id','=','l.country')
         ->leftJoin('users as u','l.leader', '=','u.id')
         ->where('l.id','=',$request->id)
         ->where('c.deleted','=',0)
@@ -94,7 +96,7 @@ class LifeGroupController extends Controller{
                   ->orWhereNull('u.deleted'); 
         })
         ->where('l.deleted','=',0)
-        ->select('l.*','c.church_name','u.user_name',DB::raW('l.image as avatar'))
+        ->select('l.*',DB::raw('co.country as country_name'),'c.church_name','u.user_name',DB::raW('l.image as avatar'))
         ->first();
 
         if ($life_groups_info) {
@@ -172,7 +174,7 @@ class LifeGroupController extends Controller{
         ->where('u.user_type','=',3)
         ->where('u.deleted','=',0)
         ->select('u.id','u.user_name','c.church_name')
-        ->orderBy('created_at','DESC');
+        ->orderBy('u.created_at','DESC');
 
         if ($request['logged_user_type'] == 1) {
             $member_info = $query->get();

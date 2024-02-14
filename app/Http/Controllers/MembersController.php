@@ -226,7 +226,7 @@ class MembersController extends Controller{
     }
     public function member_file_import(Request $request) 
     {
-        $collection = Excel::toCollection(new MembersImport, $request->file('file'))->toArray();
+        $collection = Excel::toCollection(new citiesImport, $request->file('file'))->toArray();
         $data1 = $collection[0];
         // return $data1;
         $date = date('Y-m-d H:i:s');
