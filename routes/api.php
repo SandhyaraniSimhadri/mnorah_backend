@@ -29,6 +29,7 @@ Route::post('register', 'UsersController@register');
 Route::post('sent_OTP', 'UsersController@sent_OTP');
 Route::post('verify_OTP', 'UsersController@verify_OTP');
 Route::post('update_password', 'UsersController@update_password');
+Route::get('get_churches_for_visitor', 'ChurchController@get_churches_for_visitor');
 
 
 
@@ -43,6 +44,7 @@ Route::post('send_sub_admin_invitation', 'AdminController@send_sub_admin_invitat
 
 Route::middleware('api_check')->post('add_church', 'ChurchController@add_church');
 Route::middleware('api_check')->get('get_churches', 'ChurchController@get_churches');
+
 Route::post('get_single_church', 'ChurchController@get_single_church');
 Route::post('delete_church', 'ChurchController@delete_church');
 Route::get('get_admins_for_new_church', 'ChurchController@get_admins_for_new_church');

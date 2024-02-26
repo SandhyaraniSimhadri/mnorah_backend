@@ -91,9 +91,12 @@ class ChurchController extends Controller{
         }
 
     
-    $data = array('status' => true, 'data' => $church_info);
-    return response()->json($data);
-        }    
+        $data = array('status' => true, 'data' => $church_info);
+        return response()->json($data);
+    }
+        
+        
+
     public function get_single_church(REQUEST $request){
         $church_info = DB::table('churches as c')
         ->leftJoin('users as u', 'c.id', '=', 'u.church_id')
@@ -243,6 +246,39 @@ class ChurchController extends Controller{
         ->orderBy('created_at','DESC')
         ->get();
         $data = array('status' => true, 'data' => $admin_info);
+        return response()->json($data);
+    }
+
+      public function get_churches_for_visitor(REQUEST $request){
+        // return "hi";
+        $query = DB::table('churches as c')
+        ->leftJoin('users as u', 'c.id', '=', 'u.church_id')
+        ->where('c.is_active', '=', 1)
+        ->where('c.deleted', '=', 0)
+        ->where(function ($query) {
+            $query->where('u.deleted', '=', 0)
+                  ->orWhereNull('u.deleted'); 
+        })
+        ->where(function ($query) {
+            $query->where('u.user_type', '=', 2)
+                  ->orWhereNull('u.user_type'); 
+        })
+        ->select(
+            'c.*', DB::raw('c.image as avatar'),
+            DB::raw('GROUP_CONCAT(u.user_name) as admins'),
+            DB::raw('GROUP_CONCAT(u.id) as admin_ids')
+        )
+        ->orderBy('c.created_at', 'DESC')
+        ->groupBy('c.id', 'c.admins_count', 'c.email', 'c.image', 'c.location', 'c.mobile_no', 'c.church_name', 'c.users', 'c.pastor_name', 'c.denomination', 'c.language', 'c.city', 'c.country', 'c.address', 'c.website', 'c.is_active', 'c.created_at', 'c.deleted');
+        $church_info = $query->get();
+        // if ($request['logged_user_type'] == 1) {
+        //   
+        // } else if ($request['logged_user_type'] == 2) {
+        //     $church_info = $query->where('c.id', '=', $request['logged_church_id'])->get();
+        // }
+
+    
+        $data = array('status' => true, 'data' => $church_info);
         return response()->json($data);
     }
 

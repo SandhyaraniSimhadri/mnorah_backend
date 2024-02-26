@@ -27,7 +27,12 @@ class EventController extends Controller{
     {
 
         $date = date('Y-m-d H:i:s');
-  
+        $event_image=null;
+        if ($request->hasFile('event_image')) {
+            // return $request->hasFile('homeTeamLogo')
+            $event_image = $request->file('event_image')->store('images', 'public');
+            $event_image = 'storage/'.$event_image;
+        }
         $data = array(
             'church_id' => $request->church_id,
             'event_name' => $request->event_name,
@@ -44,6 +49,7 @@ class EventController extends Controller{
             'special_req' => $request->special_req,
             'dress_code'=>$request->dress_code,
             'additional_info'=>$request->additional_info,
+            'event_image'=>$event_image
             );
 
             $aid= DB::table('events')->insertGetId($data);
@@ -90,8 +96,14 @@ class EventController extends Controller{
             // return $request->hasFile('homeTeamLogo')
             $image = $request->file('image')->store('images', 'public');
             $image = 'storage/'.$image;
+
         }
-        $update_data=DB::table('events')
+            $event_image=null;
+            if ($request->hasFile('event_image')) {
+                // return $request->hasFile('homeTeamLogo')
+                $event_image = $request->file('event_image')->store('images', 'public');
+                $event_image = 'storage/'.$event_image;
+            }            $update_data=DB::table('events')
         ->where('id','=',$request->id)
         ->update([
             'church_id' => $request->church_id,
@@ -109,7 +121,9 @@ class EventController extends Controller{
             'special_req' => $request->special_req,
             'dress_code'=>$request->dress_code,
             'additional_info'=>$request->additional_info,
-            'image'=>$image
+            'image'=>$image,
+            'event_image'=>$event_image,
+
         ]);
         if($update_data){
             $data = array('status' => true, 'msg' => 'Event details updated successfully');
