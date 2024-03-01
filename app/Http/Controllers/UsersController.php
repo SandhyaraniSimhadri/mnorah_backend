@@ -60,7 +60,7 @@ class UsersController extends Controller{
                 $user_data = DB::table('users')
                 ->where('email','=',$email)
                 ->where('password','=',$md5_password)
-                ->select('id','user_name','email','avatar','mobile_no','token','is_active','user_type','church_id')
+                ->select('id','user_name','email','avatar','mobile_no','token','is_active','user_type','church_id','role_id')
                 ->first();
                 $data = array('status' => true, 'msg' => 'Login successfull!','data'=>$user_data);
                 return response()->json($data);
@@ -77,7 +77,7 @@ class UsersController extends Controller{
                     $user_data = DB::table('users')
                     ->where('email','=',$email)
                     ->where('password','=',$md5_password)
-                    ->select('id','user_name','email','avatar','mobile_no','token','is_active','user_type','church_id')
+                    ->select('id','user_name','email','avatar','mobile_no','token','is_active','user_type','church_id','role_id')
                     ->first();
                     $data = array('status' => true, 'msg' => 'Login successfull!','data'=>$user_data);
                     return response()->json($data);

@@ -27,6 +27,7 @@ class VisitorController extends Controller{
 
     public function add_visitor(Request $request)
     {
+        
 
         $date = date('Y-m-d H:i:s');
   
@@ -51,7 +52,10 @@ class VisitorController extends Controller{
             'suggestions' => $request->suggestions,
             'prayer_request' => $request->prayer_request,
             'comments' => $request->comments,
-            'connection' => $request->connection
+            'connection' => $request->connection,
+            'visiting_with' => $request->visiting_with,
+
+
             );
 
             $aid= DB::table('visitors')->insertGetId($data);
